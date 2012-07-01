@@ -1,6 +1,6 @@
 import sys, os
 
-# simple python interface to omxplayer
+# simple python interface to omxplayer Version 1.01
 # ------------------------------------
 # developed with python 2.7, not tried on python 3.
 # +,- commands do not work in Wheezy beta.
