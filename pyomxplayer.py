@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-# omxplay is a simple python interface to omxplayer
+## omxplay is a simple python interface to omxplayer
 # Version 1.02 9/7/2012
 # ------------------------------------
 
