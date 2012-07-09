@@ -1,18 +1,22 @@
 #! /usr/bin/env python
 
-## omxplay is a simple python interface to omxplayer
-# Version 1.02 9/7/2012
+# omxplay is a simple python interface to omxplayer
+# Version 1.03 9/7/2012
 # ------------------------------------
 
-#  pyomxplayer.py and omxchild.sh must be in the same directory
-# to run -  python pyomxplayer.py from a terminal opened in the same directory
+# pyomxplayer.py AND omxchild.sh must be in the same directory
+# to run do:  python pyomxplayer.py from a terminal opened in the same directory
 # track to play is a file name e.g. my_track.mp4
 
 # developed with python 2.7, not tried on python 3.
 # +,- commands do not work in Wheezy beta 18/08 unless you have installed a later version of omxplayer.
-# videos must be in a directory set in the main program below.
+# videos must be in a directory set in the variable videodir in main program below.
 # you need a long video or else the controls will not work (bug in omxplayer)
 # Running this with Idle produces funny results, just run from a terminal.
+
+# Changes from version 1.02
+#     simple error checking on user input
+#     check omxchild.sh exists and make it executable
 
 
 # Changes from version 1.01
@@ -28,7 +32,7 @@
 
 import subprocess, os, time, sys, select
 
-# function to paly a track
+# function to play a track
 
 def omx_play(omxoptions, track):
 
@@ -162,7 +166,34 @@ def show_help ():
     print (" n - previous subtitle index\n m - next subtitle index\n s - toggle subtitles\n >cursor - seek forward 30\n <cursor - seek back 30\n ^cursor - seek forward 600\n _^cursor - seek back 600")
 
 
+def check_runnable():
+    # current working directory
+    cwd= os.getcwd()
+    
+    path = cwd + "/omxchild.sh"
+    if os.path.exists(path) == False:
+	print "omxchild.sh not found, download from github"
+        sys.exit()
+    command = "chmod +x " + path
+    os.system(command) 
 
+# check user input is OK
+def check_input (videodir,track):
+    if '.' in track:
+        path = videodir + track
+        if os.path.exists(path) == True:
+            return True
+        else:
+            print "File " + path + " not found"
+    else:
+        if (track == "help") or (track == "bye"):
+            return True
+        else:
+            print track, " not understood"
+            return False
+
+
+        
 # MAIN
 # change videodir to where you store your videos. Must be a path from root
 videodir ="/home/pi/videos/"
@@ -171,14 +202,26 @@ debug = False
 
 print "******* Welcome to pyomxplayer *******"
 
-# ask where to send the sound
-print ("Output, hdmi or local")
-op = sys.stdin.readline()
-omxoptions = "-o" + op.rstrip()
+# check all is OK to run
+check_runnable()
 
-# get a track and play it
+
+# ask where to send the sound
+while True:
+    print ("Output, hdmi or local")
+    op = sys.stdin.readline().rstrip()
+    if (op == "hdmi") or (op == "local"):
+        omxoptions = "-o" + op
+        break
+    else:
+        print op + " not understood"
+
+    
+# loop to get a track and play it
 while True:
     track = get_track()
+    if check_input(videodir, track) == False:
+        continue
     if track == "help":
         show_help()
         continue
