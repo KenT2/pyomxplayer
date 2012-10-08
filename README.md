@@ -1,6 +1,3 @@
-PYOMXPLAYER
-===========
-
 pyomxplayer uses the ideas recorded at http://www.raspberrypi.org/phpBB3/viewtopic.php?f=38&t=7987 to provide a python wrapper for omxplayer. The test harness I produced to test the wrapper can also be used as simple python based media player using omxplayer.
 
 There is now a different implementation of the python wrapper which uses PEXPECT. It is at https://github.com/jbaiter/pyomxplayer
